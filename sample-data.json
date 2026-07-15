@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "_note": "Paste this into browser console: localStorage.setItem('cricketTeamSplitter_v1', JSON.stringify(sampleData)); location.reload()",
+  "settings": {
+    "teamSize": null,
+    "seed": "weekend123",
+    "lastSeedUsed": ""
+  },
+  "players": [
+    { "id": "p1",  "name": "Alice",   "nameLower": "alice",   "role": "batter",     "skill": "strong",  "addedAt": 1720000000000 },
+    { "id": "p2",  "name": "Bob",     "nameLower": "bob",     "role": "bowler",     "skill": "strong",  "addedAt": 1720000001000 },
+    { "id": "p3",  "name": "Charlie", "nameLower": "charlie", "role": "keeper",     "skill": "normal",  "addedAt": 1720000002000 },
+    { "id": "p4",  "name": "Diana",   "nameLower": "diana",   "role": "allrounder", "skill": "normal",  "addedAt": 1720000003000 },
+    { "id": "p5",  "name": "Ethan",   "nameLower": "ethan",   "role": "batter",     "skill": "normal",  "addedAt": 1720000004000 },
+    { "id": "p6",  "name": "Fatima",  "nameLower": "fatima",  "role": "bowler",     "skill": "normal",  "addedAt": 1720000005000 },
+    { "id": "p7",  "name": "George",  "nameLower": "george",  "role": "normal",     "skill": "weak",    "addedAt": 1720000006000 },
+    { "id": "p8",  "name": "Hannah",  "nameLower": "hannah",  "role": "allrounder", "skill": "strong",  "addedAt": 1720000007000 },
+    { "id": "p9",  "name": "Ivan",    "nameLower": "ivan",    "role": "bowler",     "skill": "normal",  "addedAt": 1720000008000 },
+    { "id": "p10", "name": "Jaya",    "nameLower": "jaya",    "role": "batter",     "skill": "normal",  "addedAt": 1720000009000 },
+    { "id": "p11", "name": "Khalid",  "nameLower": "khalid",  "role": "normal",     "skill": "weak",    "addedAt": 1720000010000 },
+    { "id": "p12", "name": "Lena",    "nameLower": "lena",    "role": "keeper",     "skill": "normal",  "addedAt": 1720000011000 },
+    { "id": "p13", "name": "Mohan",   "nameLower": "mohan",   "role": "allrounder", "skill": "normal",  "addedAt": 1720000012000 },
+    { "id": "p14", "name": "Nina",    "nameLower": "nina",    "role": "batter",     "skill": "strong",  "addedAt": 1720000013000 }
+  ],
+  "constraints": [
+    {
+      "id": "c1",
+      "playerAId": "p1",
+      "playerBId": "p2",
+      "type": "opposite",
+      "addedAt": 1720000100000,
+      "_note": "Alice and Bob must be on opposite teams (both strong — keep balanced)"
+    },
+    {
+      "id": "c2",
+      "playerAId": "p3",
+      "playerBId": "p12",
+      "type": "same",
+      "addedAt": 1720000101000,
+      "_note": "Charlie and Lena (both keepers) prefer to be on the same team"
+    }
+  ],
+  "lastResult": null
+}

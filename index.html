@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cricket Team Splitter</title>
+  <meta name="description" content="Split your cricket group into two balanced teams. Works offline, no install needed." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1 class="app-title">Cricket Team Splitter</h1>
+        <p class="app-tagline">Fair, fast team splits for your weekend match</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn--ghost btn--sm" id="btn-import-json" title="Import saved data">Import</button>
+        <button class="btn btn--ghost btn--sm" id="btn-export-json" title="Export data as JSON">Export</button>
+        <button class="btn btn--danger btn--sm" id="btn-reset" title="Clear all data">Reset All</button>
+        <input type="file" id="file-import" accept=".json" style="display:none" aria-hidden="true" />
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+    <!-- ===== 1. ADD PLAYERS ===== -->
+    <section class="card" id="section-add-player" aria-labelledby="h-add-player">
+      <h2 id="h-add-player" class="section-title">Add Players</h2>
+
+      <form id="add-player-form" novalidate autocomplete="off">
+        <div class="form-row">
+          <div class="form-group flex-grow" id="add-player-name-wrap">
+            <label for="input-player-name">Name</label>
+            <input
+              type="text"
+              id="input-player-name"
+              placeholder="Player name"
+              maxlength="40"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+          <div class="form-group">
+            <label for="select-role">Role</label>
+            <select id="select-role">
+              <option value="normal">No role</option>
+              <option value="batter">Batter</option>
+              <option value="bowler">Bowler</option>
+              <option value="allrounder">All-Rounder</option>
+              <option value="keeper">Keeper</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="select-skill">Skill</label>
+            <select id="select-skill">
+              <option value="normal">Normal</option>
+              <option value="strong">Strong</option>
+              <option value="weak">Weak</option>
+            </select>
+          </div>
+          <div class="form-group form-group--action">
+            <label class="visually-hidden">Add player</label>
+            <button type="submit" class="btn btn--primary">Add</button>
+          </div>
+        </div>
+      </form>
+
+      <details class="bulk-section">
+        <summary class="bulk-toggle">Bulk Add (multiple players at once)</summary>
+        <div class="bulk-body">
+          <div class="form-group">
+            <label for="bulk-textarea">Player names — one per line or comma-separated</label>
+            <textarea
+              id="bulk-textarea"
+              rows="4"
+              placeholder="Alice&#10;Bob&#10;Charlie, David, Eve"
+              spellcheck="false"
+            ></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bulk-role">Default Role</label>
+              <select id="bulk-role">
+                <option value="normal">No role</option>
+                <option value="batter">Batter</option>
+                <option value="bowler">Bowler</option>
+                <option value="allrounder">All-Rounder</option>
+                <option value="keeper">Keeper</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="bulk-skill">Default Skill</label>
+              <select id="bulk-skill">
+                <option value="normal">Normal</option>
+                <option value="strong">Strong</option>
+                <option value="weak">Weak</option>
+              </select>
+            </div>
+            <div class="form-group form-group--action">
+              <label class="visually-hidden">Add all</label>
+              <button type="button" class="btn btn--primary" id="btn-bulk-add">Add All</button>
+            </div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- ===== 2. PLAYER LIST ===== -->
+    <section class="card" id="section-player-list" aria-labelledby="h-player-list">
+      <h2 id="h-player-list" class="section-title">
+        Players
+        <span class="count-badge" id="player-count-badge" aria-label="player count">0</span>
+      </h2>
+      <ul id="player-list" class="player-list" aria-label="Player list">
+        <li class="empty-state">No players added yet. Add some above!</li>
+      </ul>
+    </section>
+
+    <!-- ===== 3. CONSTRAINTS ===== -->
+    <section class="card" id="section-constraints" aria-labelledby="h-constraints">
+      <h2 id="h-constraints" class="section-title">
+        Constraints
+        <span class="count-badge" id="constraint-count-badge" aria-label="constraint count">0</span>
+      </h2>
+      <p class="section-hint">Force certain players onto the same or opposite teams.</p>
+
+      <form id="constraint-form" novalidate>
+        <div class="form-row" id="constraint-form-wrap">
+          <div class="form-group flex-grow">
+            <label for="constraint-a">Player A</label>
+            <select id="constraint-a">
+              <option value="">Select player…</option>
+            </select>
+          </div>
+          <div class="form-group constraint-type-group">
+            <label for="constraint-type">Rule</label>
+            <select id="constraint-type">
+              <option value="opposite">Opposite teams</option>
+              <option value="same">Same team</option>
+            </select>
+          </div>
+          <div class="form-group flex-grow">
+            <label for="constraint-b">Player B</label>
+            <select id="constraint-b">
+              <option value="">Select player…</option>
+            </select>
+          </div>
+          <div class="form-group form-group--action">
+            <label class="visually-hidden">Add constraint</label>
+            <button type="submit" class="btn btn--primary">Add</button>
+          </div>
+        </div>
+      </form>
+
+      <ul id="constraint-list" class="constraint-list" aria-label="Constraint list">
+        <li class="empty-state">No constraints added.</li>
+      </ul>
+    </section>
+
+    <!-- ===== 4. SETTINGS ===== -->
+    <section class="card" id="section-settings" aria-labelledby="h-settings">
+      <h2 id="h-settings" class="section-title">Settings</h2>
+      <div class="form-row">
+        <div class="form-group flex-grow" id="team-size-wrap">
+          <label for="input-team-size">Team Size</label>
+          <div class="input-with-btn">
+            <input
+              type="number"
+              id="input-team-size"
+              min="1"
+              max="20"
+              placeholder="Auto"
+            />
+            <button type="button" class="btn btn--ghost-green btn--sm" id="btn-clear-team-size">Auto</button>
+          </div>
+          <p class="field-hint">Leave blank to auto-split based on player count.</p>
+        </div>
+        <div class="form-group flex-grow">
+          <label for="input-seed">Random Seed</label>
+          <input
+            type="text"
+            id="input-seed"
+            placeholder="Leave blank for random"
+            maxlength="50"
+            spellcheck="false"
+          />
+          <p class="field-hint">Enter a seed to get the same split every time you generate.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 5. SUMMARY + GENERATE ===== -->
+    <section class="card card--generate" id="section-generate" aria-label="Generate teams">
+      <div class="summary-bar" role="status" aria-live="polite">
+        <div class="summary-stat">
+          <span class="summary-value" id="summary-players">0</span>
+          <span class="summary-label">Players</span>
+        </div>
+        <div class="summary-divider" aria-hidden="true"></div>
+        <div class="summary-stat">
+          <span class="summary-value" id="summary-constraints">0</span>
+          <span class="summary-label">Constraints</span>
+        </div>
+        <div class="summary-divider" aria-hidden="true"></div>
+        <div class="summary-stat">
+          <span class="summary-value" id="summary-team-size">—</span>
+          <span class="summary-label">Team size</span>
+        </div>
+        <div class="summary-divider" aria-hidden="true"></div>
+        <div class="summary-stat">
+          <span class="summary-value" id="summary-bench">0</span>
+          <span class="summary-label">Bench</span>
+        </div>
+      </div>
+      <button
+        class="btn btn--primary btn--large btn--full"
+        id="btn-generate"
+        disabled
+        aria-describedby="generate-hint"
+      >
+        Generate Teams
+      </button>
+      <p class="generate-hint" id="generate-hint">Add at least 2 players to generate teams.</p>
+    </section>
+
+    <!-- ===== 6. RESULTS ===== -->
+    <section class="card" id="section-results" aria-labelledby="h-results">
+      <h2 id="h-results" class="section-title">Results</h2>
+      <div id="results-content">
+        <p class="empty-state">Generate teams to see results here.</p>
+      </div>
+    </section>
+
+    <!-- ===== 7. MATCHES ===== -->
+    <section class="card" id="section-matches" aria-labelledby="h-matches">
+      <h2 id="h-matches" class="section-title">
+        Matches
+        <span class="count-badge" id="match-count-badge">0</span>
+        <button class="btn btn--danger btn--sm" id="btn-reset-matches" style="margin-left:auto" title="Delete all matches">Reset Matches</button>
+      </h2>
+      <p class="section-hint">Create up to 4 matches for the day. Each match tracks ball-by-ball scoring.</p>
+
+      <div id="match-list" class="match-list">
+        <p class="empty-state">No matches yet. Create one below.</p>
+      </div>
+
+      <details class="bulk-section" id="create-match-details">
+        <summary class="bulk-toggle">+ Create New Match</summary>
+        <div class="bulk-body">
+          <div class="form-row">
+            <div class="form-group flex-grow">
+              <label for="match-name-input">Match Name</label>
+              <input type="text" id="match-name-input" placeholder="Match 1" maxlength="30" />
+            </div>
+            <div class="form-group">
+              <label for="match-overs-input">Max Overs</label>
+              <input type="number" id="match-overs-input" value="6" min="1" max="50" style="width:80px" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="match-use-last-teams" />
+              Use last generated teams
+            </label>
+          </div>
+          <div class="form-row" id="match-team-pickers">
+            <div class="form-group flex-grow">
+              <label>Team A Players</label>
+              <div id="match-team-a-picks" class="player-pick-list"></div>
+            </div>
+            <div class="form-group flex-grow">
+              <label>Team B Players</label>
+              <div id="match-team-b-picks" class="player-pick-list"></div>
+            </div>
+          </div>
+          <button class="btn btn--primary" id="btn-create-match">Create Match</button>
+          <div class="form-error" id="create-match-error"></div>
+        </div>
+      </details>
+    </section>
+
+    <!-- ===== 8. LIVE SCORING ===== -->
+    <section class="card" id="section-scoring" aria-labelledby="h-scoring">
+      <h2 id="h-scoring" class="section-title">Live Scoring</h2>
+      <div id="scoring-panel">
+        <p class="empty-state">Open a match above to start scoring.</p>
+      </div>
+    </section>
+
+    <!-- ===== 9. DAY STATS ===== -->
+    <section class="card" id="section-day-stats" aria-labelledby="h-day-stats">
+      <h2 id="h-day-stats" class="section-title">Day Stats</h2>
+      <div id="day-stats-content">
+        <p class="empty-state">Stats will appear here once matches are played.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>All data stays in your browser — nothing is sent anywhere.</p>
+  </footer>
+
+  <!-- Toast notification container -->
+  <div id="toast-container" aria-live="assertive" aria-atomic="false"></div>
+
+  <script src="players.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
