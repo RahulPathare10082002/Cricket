@@ -291,6 +291,35 @@ textarea { resize: vertical; min-height: 80px; }
 }
 .btn--rest:hover { background: #ffe0e0; border-color: #b03030; }
 
+/* Manual team-pin buttons */
+.btn--pin-auto {
+ background: transparent;
+ color: var(--color-text-muted);
+ border: 1.5px dashed var(--color-border);
+}
+.btn--pin-auto:hover { border-color: var(--color-text-muted); color: var(--color-text); }
+.btn--pin-a {
+ background: var(--color-team-a-bg);
+ color: var(--color-team-a);
+ border: 1.5px solid var(--color-team-a);
+ font-weight: 700;
+}
+.btn--pin-a:hover { background: #bbdefb; }
+.btn--pin-b {
+ background: var(--color-team-b-bg);
+ color: var(--color-team-b);
+ border: 1.5px solid var(--color-team-b);
+ font-weight: 700;
+}
+.btn--pin-b:hover { background: #e1bee7; }
+.btn--pin-bench {
+ background: var(--color-bench-bg);
+ color: var(--color-bench);
+ border: 1.5px solid var(--color-bench);
+}
+.btn--pin-bench:hover { background: #cfd8dc; }
+.pin-btn { min-width: 58px; }
+
 .btn--icon {
  width: 40px;
  height: 40px;
@@ -762,6 +791,13 @@ details[open] .bulk-toggle::before { content: "▼"; }
  min-width: 0;
 }
 .batter-card--on-strike { border-color: var(--color-primary); background: #f0fbf4; }
+.batter-card--tap:active { background: #e8f5e9; border-color: var(--color-primary); }
+.swap-hint {
+ font-size: 0.7rem;
+ color: var(--color-text-muted);
+ margin-left: 3px;
+ flex-shrink: 0;
+}
 .batter-card-name {
  font-weight: 700;
  font-size: var(--font-size-sm);
@@ -831,15 +867,15 @@ details[open] .bulk-toggle::before { content: "▼"; }
 
 .ball-buttons {
  display: grid;
- /* 5 columns on phone: · 1 2 3 [Wd] then 4 6 Nb W↓ Undo */
- grid-template-columns: repeat(5, 1fr);
- gap: 6px;
+ /* Phone: 4 columns for the main runs row, extras wrap below */
+ grid-template-columns: repeat(4, 1fr);
+ gap: 8px;
  margin-bottom: var(--gap-sm);
 }
 .ball-btn {
- min-height: 52px; /* comfortable thumb target */
+ min-height: 58px; /* bigger thumb target for umpire use */
  border-radius: var(--radius-sm);
- font-size: 1.05rem;
+ font-size: 1.1rem;
  font-weight: 700;
  border: 2px solid var(--color-border);
  background: var(--color-surface);
@@ -853,7 +889,9 @@ details[open] .bulk-toggle::before { content: "▼"; }
 .ball-btn--four { border-color: var(--ball-four); color: var(--ball-four); }
 .ball-btn--six { border-color: var(--ball-six); color: var(--ball-six); }
 .ball-btn--wide { border-color: var(--ball-extra); color: var(--ball-extra); }
-.ball-btn--noball { border-color: var(--ball-extra); color: var(--ball-extra); }
+.ball-btn--noball { border-color: var(--ball-extra); color: var(--ball-extra); font-size: var(--font-size-sm); }
+.ball-btn--bye { border-color: #2e7d32; color: #2e7d32; font-size: var(--font-size-sm); }
+.ball-btn--legbye { border-color: #558b2f; color: #558b2f; font-size: var(--font-size-sm); }
 .ball-btn--wicket {
  border-color: var(--ball-wicket);
  color: var(--ball-wicket);
@@ -1176,10 +1214,11 @@ details[open] .bulk-toggle::before { content: "▼"; }
  .results-meta { flex-direction: row; align-items: center; }
  .results-actions .btn { flex: 0 0 auto; }
 
- /* Ball buttons: 5 run cols + Wd + Nb | Wicket | Undo = 8 cols */
- .ball-buttons { grid-template-columns: repeat(8, 1fr); }
+ /* Ball buttons: wider screens get a single dense row */
+ .ball-buttons { grid-template-columns: repeat(8, 1fr); gap: 6px; }
  .ball-btn--wicket { grid-column: span 1; }
  .ball-btn--undo { grid-column: span 1; }
+ .ball-btn { min-height: 52px; }
 }
 
 /* ================================================================
@@ -1391,3 +1430,121 @@ details[open] .bulk-toggle::before { content: "▼"; }
 .ball-dot--sm.bd-wicket { background: var(--ball-wicket); color: #fff; border-color: var(--ball-wicket); }
 .ball-dot--sm.bd-extra { background: var(--ball-extra); color: #fff; border-color: var(--ball-extra); }
 .ball-dot--sm.bd-dot { background: var(--color-surface-alt); color: var(--ball-dot); }
+
+/* ================================================================
+ CAPTAIN STRIP (shown on toss panel and scorecards)
+ ================================================================ */
+.captain-strip {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 0.5rem;
+ margin-bottom: 1rem;
+}
+.captain-chip {
+ display: inline-flex;
+ align-items: center;
+ gap: 4px;
+ padding: 3px 10px;
+ border-radius: var(--radius-pill);
+ font-size: var(--font-size-xs);
+ font-weight: 600;
+ white-space: nowrap;
+}
+.captain-chip--a {
+ background: var(--color-team-a-bg);
+ color: var(--color-team-a);
+ border: 1px solid var(--color-team-a);
+}
+.captain-chip--b {
+ background: var(--color-team-b-bg);
+ color: var(--color-team-b);
+ border: 1px solid var(--color-team-b);
+}
+.captain-marker {
+ font-size: 0.65rem;
+ font-weight: 700;
+ color: var(--color-accent);
+ margin-left: 2px;
+}
+
+/* ================================================================
+ BYE / LEG-BYE BALL DOT
+ ================================================================ */
+:root { --ball-bye: #2e7d32; }
+
+.ball-dot--sm.bd-bye { background: var(--ball-bye); color: #fff; border-color: var(--ball-bye); }
+.ball-dot--bye { background: var(--ball-bye); color: #fff; border-color: var(--ball-bye); }
+
+/* ================================================================
+ WAKE LOCK BUTTON — active state
+ ================================================================ */
+.btn--wake-on {
+ background: rgba(255,255,255,0.25) !important;
+ border-color: #fff !important;
+ color: #fff !important;
+}
+
+/* ================================================================
+ HIGH CONTRAST / OUTDOOR MODE
+ ================================================================ */
+.high-contrast {
+ --color-primary: #000000;
+ --color-primary-hover: #222222;
+ --color-primary-dark: #000000;
+ --color-surface: #000000;
+ --color-surface-alt: #111111;
+ --color-border: #444444;
+ --color-text: #ffffff;
+ --color-text-muted: #cccccc;
+ --color-placeholder: #888888;
+ --ball-dot: #aaaaaa;
+ --ball-run: #ffffff;
+}
+.high-contrast body {
+ background: #000;
+ color: #fff;
+}
+.high-contrast .card {
+ background: #111;
+ border-color: #444;
+}
+.high-contrast .scoring-header {
+ background: #000;
+ border: 2px solid #fff;
+}
+.high-contrast .batter-card {
+ background: #111;
+ border-color: #555;
+}
+.high-contrast .batter-card--on-strike {
+ background: #1a1a1a;
+ border-color: #fff;
+}
+.high-contrast .bowler-card {
+ background: #111;
+ border-color: #555;
+}
+.high-contrast .ball-btn {
+ background: #000;
+ color: #fff;
+ border-color: #666;
+}
+.high-contrast .ball-btn--four { border-color: #64b5f6; color: #64b5f6; }
+.high-contrast .ball-btn--six { border-color: #ce93d8; color: #ce93d8; }
+.high-contrast .ball-btn--wide { border-color: #ffcc02; color: #ffcc02; }
+.high-contrast .ball-btn--noball { border-color: #ffcc02; color: #ffcc02; }
+.high-contrast .ball-btn--bye { border-color: #81c784; color: #81c784; }
+.high-contrast .ball-btn--legbye { border-color: #aed581; color: #aed581; }
+.high-contrast .ball-btn--wicket { border-color: #ef9a9a; color: #ef9a9a; }
+.high-contrast .ball-btn--undo { border-color: #888; color: #aaa; }
+.high-contrast .live-scoreboard { background: #111; border-color: #444; }
+.high-contrast .stats-table th { background: #222; }
+.high-contrast .app-header { background: #000; border-bottom: 2px solid #fff; }
+.high-contrast input,
+.high-contrast select,
+.high-contrast textarea {
+ background: #111;
+ color: #fff;
+ border-color: #555;
+}
+.high-contrast .scoring-score { font-size: 2.6rem; }

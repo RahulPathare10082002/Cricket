@@ -16,6 +16,8 @@
         <p class="app-tagline">Fair, fast team splits for your weekend match</p>
       </div>
       <div class="header-actions">
+        <button class="btn btn--ghost btn--sm" id="btn-wake-lock" title="Prevent screen from sleeping during scoring">☀ Keep Awake</button>
+        <button class="btn btn--ghost btn--sm" id="btn-high-contrast" title="High contrast outdoor mode">◑ Outdoor</button>
         <button class="btn btn--ghost btn--sm" id="btn-import-json" title="Import saved data">Import</button>
         <button class="btn btn--ghost btn--sm" id="btn-export-json" title="Export data as JSON">Export</button>
         <button class="btn btn--danger btn--sm" id="btn-reset" title="Clear all data">Reset All</button>
@@ -212,7 +214,7 @@
         <div class="summary-divider" aria-hidden="true"></div>
         <div class="summary-stat">
           <span class="summary-value" id="summary-bench">0</span>
-          <span class="summary-label">Bench</span>
+          <span class="summary-label">Common</span>
         </div>
       </div>
       <button
@@ -292,7 +294,10 @@
 
     <!-- ===== 9. DAY STATS ===== -->
     <section class="card" id="section-day-stats" aria-labelledby="h-day-stats">
-      <h2 id="h-day-stats" class="section-title">Day Stats</h2>
+      <h2 id="h-day-stats" class="section-title">
+        Day Stats
+        <button class="btn btn--danger btn--sm" id="btn-reset-captain-stats" style="margin-left:auto" title="Clear all-time captain stats">Reset Captain Stats</button>
+      </h2>
       <div id="day-stats-content">
         <p class="empty-state">Stats will appear here once matches are played.</p>
       </div>

@@ -88,6 +88,9 @@ function renderPlayerList(state) {
   list.innerHTML = state.players.map(p => {
     const score   = playerScore(p);
     const playing = p.playing !== false;
+    const pin     = p.teamPin || null;
+    const pinLabel = pin === 'A' ? 'Team A' : pin === 'B' ? 'Team B' : pin === 'bench' ? 'Common' : 'Auto';
+    const pinClass = pin === 'A' ? 'btn--pin-a' : pin === 'B' ? 'btn--pin-b' : pin === 'bench' ? 'btn--pin-bench' : 'btn--pin-auto';
     return `
       <li class="player-item ${playing ? '' : 'player-item--not-playing'}" data-player-id="${esc(p.id)}">
         <span class="player-name">${esc(p.name)}</span>
@@ -104,6 +107,12 @@ function renderPlayerList(state) {
             data-id="${esc(p.id)}"
             aria-label="${playing ? 'Mark not playing' : 'Mark playing'}"
           >${playing ? 'Playing' : 'Resting'}</button>
+          <button
+            class="btn btn--sm ${pinClass} pin-btn"
+            title="Cycle team assignment: Auto → A → B → Common"
+            data-action="cycle-pin"
+            data-id="${esc(p.id)}"
+          >${pinLabel}</button>
           <button
             class="btn btn--icon"
             title="Edit player"
@@ -186,6 +195,7 @@ function onAddPlayer(e, state) {
     role:      roleSelect.value,
     skill:     skillSelect.value,
     playing:   true,
+    teamPin:   null,
     addedAt:   Date.now(),
   });
 
@@ -228,6 +238,7 @@ function onBulkAdd(state) {
       role,
       skill,
       playing:   true,
+      teamPin:   null,
       addedAt:   Date.now(),
     });
     added++;
@@ -243,6 +254,15 @@ function onBulkAdd(state) {
   } else {
     showToast(`Added ${added} player(s).`, 'success');
   }
+}
+
+function onCycleTeamPin(playerId, state) {
+  const player = getPlayerById(state, playerId);
+  if (!player) return;
+  const cycle = { null: 'A', A: 'B', B: 'bench', bench: null };
+  player.teamPin = cycle[player.teamPin] ?? null;
+  saveState(state);
+  renderPlayerList(state);
 }
 
 function onTogglePlaying(playerId, state) {
@@ -323,6 +343,7 @@ function bindPlayerEvents(state) {
     if (action === 'save-player')    onSavePlayer(id, state);
     if (action === 'cancel-edit')    onCancelEdit(state);
     if (action === 'toggle-playing') onTogglePlaying(id, state);
+    if (action === 'cycle-pin')      onCycleTeamPin(id, state);
   });
 
   document.getElementById('player-list').addEventListener('keydown', e => {
